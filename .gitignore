@@ -205,3 +205,22 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Google API credentials
+credentials.json
+token.json
+
+# Database / local data
+*.db
+*.sqlite
+
+# Sample dataset (optional)
+data/*.json
+data/*.csv
+
+# Logs and outputs
+logs/
+output/
+
+# Email attachments
+attachments/
