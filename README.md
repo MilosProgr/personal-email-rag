@@ -118,7 +118,7 @@ personal-email-rag/
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Project documentation
 
-
+```
 ## Setup
 1. Clone repository
 git clone <repo_url>
