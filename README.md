@@ -46,8 +46,6 @@ The system is fully extensible and can be deployed locally using Docker.
 
 ## Architecture
 
-![System Architecture](./architecture.png)
-
 The system follows a modular RAG pipeline:
 
 1. **Gmail API / Google Drive API**  
