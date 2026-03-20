@@ -29,6 +29,8 @@ The system is fully extensible and can be deployed locally using Docker.
 - Gmail API & Google Drive API  
 - Docker  
 
+---
+
 ## Features
 
 ✅ Gmail ingestion per user (with OAuth tokens)  
@@ -37,7 +39,7 @@ The system is fully extensible and can be deployed locally using Docker.
 ✅ Vector database storage with pgvector  
 ✅ Retrieval of top-K relevant emails/documents  
 ✅ LLM-powered answer generation based on retrieved content  
-✅ Multi-user isolation using per-user authentication tokens 
+✅ Multi-user isolation using per-user authentication tokens  
 ✅ Metrics for embedding, retrieval, and LLM generation times  
 
 ---
@@ -48,25 +50,25 @@ The system is fully extensible and can be deployed locally using Docker.
 
 The system follows a modular RAG pipeline:
 
-1. Gmail API / Google Drive API  
+1. **Gmail API / Google Drive API**  
    - Fetches emails and documents per user using OAuth authentication  
 
-2. Email & Document Parser  
+2. **Email & Document Parser**  
    - Extracts structured data (sender, subject, body, timestamp)  
    - Parses attachments (PDF, DOCX, TXT)  
 
-3. Embedding Model  
+3. **Embedding Model**  
    - Converts text into vector representations using sentence-transformers  
 
-4. Vector Database (pgvector)  
+4. **Vector Database (pgvector)**  
    - Stores embeddings and metadata  
    - Enables similarity search using vector distance  
 
-5. RAG Pipeline  
+5. **RAG Pipeline**  
    - Retrieves top-K relevant documents  
    - Constructs context-aware prompt  
 
-6. Local LLM  
+6. **Local LLM**  
    - Generates final answer using retrieved context  
 
 ### Design Decisions
@@ -77,9 +79,11 @@ The system follows a modular RAG pipeline:
 
 ### Model Choices
 
-- Embedding: all-MiniLM-L6-v2 (fast, lightweight)
-- LLM: BLOOM-560m (runs locally, low resource)
-- DB: pgvector (efficient similarity search)
+- **Embedding:** all-MiniLM-L6-v2 (fast, lightweight)  
+- **LLM:** BLOOM-560m (runs locally, low resource)  
+- **DB:** pgvector (efficient similarity search)  
+
+---
 
 ## Project Structure
 
@@ -104,34 +108,26 @@ personal-email-rag/
 │   ├── llm_wrapper.py          # Local LLM loading and inference
 │   ├── rag_pipeline.py         # Core RAG logic (embed → retrieve → generate)
 │   ├── vector_db.py            # PostgreSQL + pgvector operations
-│   
 │
 ├── tests/
 │   ├── demo_multi_user.py      # Multi-user demo and testing
-    └── user_auth.py            # Simple user authentication and multi-user validation
+│   └── user_auth.py            # Simple user authentication and multi-user validation
 │
 ├── docker-compose.yml          # Docker setup for app + database
 ├── Dockerfile                  # Docker image for the application
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Project documentation
-```
 
-## Setup
-
+Setup
 1. Clone repository
-```bash
 git clone <repo_url>
 cd personal-email-rag
-```
-```md
 2. Install dependencies
 pip install -r requirements.txt
 3. Google credentials
 
 Place your credentials.json in the data/ folder. Do not commit your client secret.
 
-```md
-```json
 {
   "installed": {
     "client_id": "YOUR_CLIENT_ID",
@@ -160,7 +156,7 @@ User: postgres
 
 Password: yourpassword
 
-# Running the Project
+Running the Project
 1. Ingest emails & files
 python src/ingest.py
 
@@ -187,7 +183,7 @@ Summarize all conversations about the product launch
 
 When did I last hear from the marketing team?
 
-# Running Tests
+Running Tests
 1. Demo multi-user test
 python -m tests.demo_multi_user
 
@@ -199,11 +195,11 @@ Answer:
 ...
 Metrics -> Embedding: 0.12s | Retrieval: 0.03s | LLM: 1.45s
 2. Authentication test
-python -m unittest tests.test_user_auth
+python -m unittest tests.user_auth
 
 This verifies that only valid users (user1 / user2) can authenticate.
 
-# Usage Notes
+Usage Notes
 
 User authentication is handled by src/user_auth.py. Only user1 (Alice) and user2 (Bob) are valid by default.
 
@@ -213,14 +209,11 @@ Embeddings are computed using sentence-transformers/all-MiniLM-L6-v2.
 
 Answers are generated using local LLM (bigscience/bloom-560m) to reduce RAM usage.
 
-# Metrics are printed for each query:
+Metrics are printed for each query:
 
 Embedding: X.XXs | Retrieval: X.XXs | LLM: X.XXs
-
-```md
-## Docker Setup (Recommended)
-## Dockerfile (Python app)
-```dockerfile
+Docker Setup (Recommended)
+Dockerfile (Python app)
 FROM python:3.11
 
 WORKDIR /app
@@ -251,8 +244,7 @@ services:
     volumes:
       - .:/app
 
-Run docker-compose up to start both DB and app.
-The app will automatically connect to the DB on localhost:5440.
+Run docker-compose up to start both DB and app. The app will automatically connect to the DB on localhost:5440.
 
 Security & Notes
 
@@ -262,18 +254,22 @@ Tokens (token_user1.pkl, token_drive_user1.pkl, etc.) are automatically created 
 
 In production, consider parameterized vector queries to prevent SQL injection.
 
-# License
+License
 
 MIT License – free to use for personal and educational purposes.
 
-## Limitations
+Limitations
 
-- LLM (BLOOM-560m) has limited reasoning capabilities compared to larger models  
-- Gmail API rate limits may affect ingestion speed  
-- Vector search is not optimized for very large datasets  
+LLM (BLOOM-560m) has limited reasoning capabilities compared to larger models
 
-## Future Improvements
+Gmail API rate limits may affect ingestion speed
 
-- Add larger quantized LLM (e.g. Mistral 7B)  
-- Implement hybrid search (keyword + vector)  
-- Improve prompt engineering for more accurate answers
+Vector search is not optimized for very large datasets
+
+Future Improvements
+
+Add larger quantized LLM (e.g. Mistral 7B)
+
+Implement hybrid search (keyword + vector)
+
+Improve prompt engineering for more accurate answers
