@@ -1,4 +1,3 @@
-# src/attachment_parser.py
 import os
 from PyPDF2 import PdfReader
 from docx import Document
@@ -23,6 +22,8 @@ def read_docx(file_path):
 
 def parse_attachment(filename):
     file_path = os.path.join(ATTACHMENTS_DIR, filename)
+    if not os.path.exists(file_path):
+        return ""
 
     if filename.endswith(".txt"):
         return read_txt(file_path)

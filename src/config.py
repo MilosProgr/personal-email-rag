@@ -1,4 +1,3 @@
-# src/config.py
 DB_CONFIG = {
     "host": "localhost",
     "port": 5440,
@@ -7,7 +6,9 @@ DB_CONFIG = {
     "password": "yourpassword"
 }
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # za embeddings
-# Za test LLM, manji model da ne troši puno RAM-a
-LLM_MODEL_PATH = "bigscience/bloom-560m"  
-TOP_K = 5  # koliko emaila vratiti za query
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+LLM_MODEL_PATH = "bigscience/bloom-560m"
+TOP_K = 5
+
+GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive.readonly']

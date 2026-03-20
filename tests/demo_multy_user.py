@@ -13,8 +13,7 @@ for user_id, query in queries:
         authenticate(user_id)
         print(f"\n=== User: {user_id} ===")
         print(f"Query: {query}")
-        answer, embedding_time, retrieval_time, llm_time = run_query(query, user_id)
+        answer = run_query(query, user_id)
         print("Answer:\n", answer)
-        print(f"Metrics -> Embedding: {embedding_time:.2f}s | Retrieval: {retrieval_time:.2f}s | LLM: {llm_time:.2f}s")
     except ValueError as e:
         print(e)

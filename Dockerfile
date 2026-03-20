@@ -1,8 +1,9 @@
-FROM postgres:15
+FROM python:3.11
 
-# Instaliraj pgvector
-RUN apt-get update && apt-get install -y postgresql-server-dev-15 build-essential git \
-    && git clone https://github.com/pgvector/pgvector.git \
-    && cd pgvector \
-    && make && make install \
-    && cd .. && rm -rf pgvector
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "demo.py"]
