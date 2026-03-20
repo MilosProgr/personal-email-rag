@@ -20,6 +20,15 @@ The system is fully extensible and can be deployed locally using Docker.
 
 ---
 
+## Tech Stack
+
+- Python 3.11  
+- PostgreSQL + pgvector  
+- sentence-transformers  
+- Hugging Face Transformers  
+- Gmail API & Google Drive API  
+- Docker  
+
 ## Features
 
 ✅ Gmail ingestion per user (with OAuth tokens)  
@@ -28,54 +37,101 @@ The system is fully extensible and can be deployed locally using Docker.
 ✅ Vector database storage with pgvector  
 ✅ Retrieval of top-K relevant emails/documents  
 ✅ LLM-powered answer generation based on retrieved content  
-✅ Multi-user isolation with authentication  
+✅ Multi-user isolation using per-user authentication tokens 
 ✅ Metrics for embedding, retrieval, and LLM generation times  
 
 ---
+
+## Architecture
+
+![System Architecture](./architecture.png)
+
+The system follows a modular RAG pipeline:
+
+1. Gmail API / Google Drive API  
+   - Fetches emails and documents per user using OAuth authentication  
+
+2. Email & Document Parser  
+   - Extracts structured data (sender, subject, body, timestamp)  
+   - Parses attachments (PDF, DOCX, TXT)  
+
+3. Embedding Model  
+   - Converts text into vector representations using sentence-transformers  
+
+4. Vector Database (pgvector)  
+   - Stores embeddings and metadata  
+   - Enables similarity search using vector distance  
+
+5. RAG Pipeline  
+   - Retrieves top-K relevant documents  
+   - Constructs context-aware prompt  
+
+6. Local LLM  
+   - Generates final answer using retrieved context  
+
+### Design Decisions
+
+- A lightweight embedding model was chosen to ensure fast inference on local hardware.  
+- BLOOM-560m was selected as a balance between performance and resource usage.  
+- pgvector was used due to its seamless integration with PostgreSQL and efficient similarity search.
+
+### Model Choices
+
+- Embedding: all-MiniLM-L6-v2 (fast, lightweight)
+- LLM: BLOOM-560m (runs locally, low resource)
+- DB: pgvector (efficient similarity search)
 
 ## Project Structure
 
 ```text
 personal-email-rag/
 │
+├── docs/
+│   └── architecture.png        # System architecture diagram
+│
 ├── data/
-│   ├── attachments/      # Gmail attachments storage
-│   ├── drive_files/      # Google Drive files
-│   ├── users.json        # User info
-│   └── credentials.json  # Google OAuth credentials (not included)
+│   ├── attachments/            # Downloaded Gmail attachments
+│   ├── drive_files/            # Downloaded Google Drive files
+│   ├── users.json              # User configuration
+│   └── credentials.json        # Google OAuth credentials (not included)
 │
 ├── src/
-│   ├── attachment_parser.py
-│   ├── config.py
-│   ├── demo.py
-│   ├── gmail_client.py
-│   ├── ingest.py
-│   ├── llm_wrapper.py
-│   ├── rag_pipeline.py
-│   ├── vector_db.py
-│   └── user_auth.py
+│   ├── attachment_parser.py    # Parses PDF, DOCX, TXT files
+│   ├── config.py               # Configuration (DB, models, constants)
+│   ├── demo.py                 # Demo script for running queries
+│   ├── gmail_client.py         # Gmail & Drive API integration
+│   ├── ingest.py               # Data ingestion and embedding pipeline
+│   ├── llm_wrapper.py          # Local LLM loading and inference
+│   ├── rag_pipeline.py         # Core RAG logic (embed → retrieve → generate)
+│   ├── vector_db.py            # PostgreSQL + pgvector operations
+│   
 │
 ├── tests/
-│   ├── demo_multi_user.py   # Demo queries for multiple users
-│   └── test_user_auth.py    # Unit tests for authentication
+│   ├── demo_multi_user.py      # Multi-user demo and testing
+    └── user_auth.py            # Simple user authentication and multi-user validation
 │
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
+├── docker-compose.yml          # Docker setup for app + database
+├── Dockerfile                  # Docker image for the application
+├── requirements.txt            # Python dependencies
+└── README.md                   # Project documentation
 ```
 
 ## Setup
 
 1. Clone repository
+```bash
 git clone <repo_url>
 cd personal-email-rag
+```
+```md
 2. Install dependencies
 pip install -r requirements.txt
 3. Google credentials
 
 Place your credentials.json in the data/ folder. Do not commit your client secret.
 
+```md
+```json
 {
   "installed": {
     "client_id": "YOUR_CLIENT_ID",
@@ -160,8 +216,11 @@ Answers are generated using local LLM (bigscience/bloom-560m) to reduce RAM usag
 # Metrics are printed for each query:
 
 Embedding: X.XXs | Retrieval: X.XXs | LLM: X.XXs
-Docker Setup (Recommended)
-Dockerfile (Python app)
+
+```md
+## Docker Setup (Recommended)
+## Dockerfile (Python app)
+```dockerfile
 FROM python:3.11
 
 WORKDIR /app
@@ -206,3 +265,15 @@ In production, consider parameterized vector queries to prevent SQL injection.
 # License
 
 MIT License – free to use for personal and educational purposes.
+
+## Limitations
+
+- LLM (BLOOM-560m) has limited reasoning capabilities compared to larger models  
+- Gmail API rate limits may affect ingestion speed  
+- Vector search is not optimized for very large datasets  
+
+## Future Improvements
+
+- Add larger quantized LLM (e.g. Mistral 7B)  
+- Implement hybrid search (keyword + vector)  
+- Improve prompt engineering for more accurate answers

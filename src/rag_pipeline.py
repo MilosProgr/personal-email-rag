@@ -22,7 +22,7 @@ def run_query(user_query, user_id, top_k=TOP_K):
         return f"No emails found for user {user_id} or no relevant content.", embedding_time, retrieval_time, 0
 
     # 3️⃣ Build prompt
-    email_texts = "\n\n".join([f"From: {e[1]}, Subject: {e[2]}, Body: {e[3]}" for e in emails])
+    email_texts = "\n\n".join([f" Email ID: {e[0]}], From: {e[1]}, Subject: {e[2]}, Body: {e[3]}" for e in emails])
     prompt = f"Use the following emails/files to answer the question:\n{email_texts}\n\nQuestion: {user_query}\nAnswer:"
 
     # 4️⃣ LLM generation
