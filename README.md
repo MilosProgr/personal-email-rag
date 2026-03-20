@@ -65,7 +65,8 @@ personal-email-rag/
 └── README.md
 ```
 
-Setup
+## Setup
+
 1. Clone repository
 git clone <repo_url>
 cd personal-email-rag
@@ -103,7 +104,7 @@ User: postgres
 
 Password: yourpassword
 
-Running the Project
+# Running the Project
 1. Ingest emails & files
 python src/ingest.py
 
@@ -130,7 +131,7 @@ Summarize all conversations about the product launch
 
 When did I last hear from the marketing team?
 
-Running Tests
+# Running Tests
 1. Demo multi-user test
 python -m tests.demo_multi_user
 
