@@ -147,7 +147,7 @@ python -m unittest tests.test_user_auth
 
 This verifies that only valid users (user1 / user2) can authenticate.
 
-Usage Notes
+# Usage Notes
 
 User authentication is handled by src/user_auth.py. Only user1 (Alice) and user2 (Bob) are valid by default.
 
@@ -157,7 +157,7 @@ Embeddings are computed using sentence-transformers/all-MiniLM-L6-v2.
 
 Answers are generated using local LLM (bigscience/bloom-560m) to reduce RAM usage.
 
-Metrics are printed for each query:
+# Metrics are printed for each query:
 
 Embedding: X.XXs | Retrieval: X.XXs | LLM: X.XXs
 Docker Setup (Recommended)
@@ -203,6 +203,6 @@ Tokens (token_user1.pkl, token_drive_user1.pkl, etc.) are automatically created 
 
 In production, consider parameterized vector queries to prevent SQL injection.
 
-License
+# License
 
 MIT License – free to use for personal and educational purposes.
