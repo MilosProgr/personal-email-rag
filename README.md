@@ -118,7 +118,8 @@ personal-email-rag/
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Project documentation
 
-Setup
+
+## Setup
 1. Clone repository
 git clone <repo_url>
 cd personal-email-rag
@@ -156,7 +157,7 @@ User: postgres
 
 Password: yourpassword
 
-Running the Project
+## Running the Project
 1. Ingest emails & files
 python src/ingest.py
 
@@ -183,7 +184,7 @@ Summarize all conversations about the product launch
 
 When did I last hear from the marketing team?
 
-Running Tests
+## Running Tests
 1. Demo multi-user test
 python -m tests.demo_multi_user
 
@@ -199,7 +200,7 @@ python -m unittest tests.user_auth
 
 This verifies that only valid users (user1 / user2) can authenticate.
 
-Usage Notes
+## Usage Notes
 
 User authentication is handled by src/user_auth.py. Only user1 (Alice) and user2 (Bob) are valid by default.
 
@@ -246,7 +247,7 @@ services:
 
 Run docker-compose up to start both DB and app. The app will automatically connect to the DB on localhost:5440.
 
-Security & Notes
+## Security & Notes
 
 Do NOT commit credentials.json with your Google client secret.
 
@@ -254,11 +255,7 @@ Tokens (token_user1.pkl, token_drive_user1.pkl, etc.) are automatically created 
 
 In production, consider parameterized vector queries to prevent SQL injection.
 
-License
-
-MIT License – free to use for personal and educational purposes.
-
-Limitations
+## Limitations
 
 LLM (BLOOM-560m) has limited reasoning capabilities compared to larger models
 
@@ -273,3 +270,7 @@ Add larger quantized LLM (e.g. Mistral 7B)
 Implement hybrid search (keyword + vector)
 
 Improve prompt engineering for more accurate answers
+
+## License
+
+MIT License – free to use for personal and educational purposes.
