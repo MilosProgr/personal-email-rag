@@ -34,7 +34,7 @@ for user in users:
 
     # Optional Drive ingestion
     drive_service = get_drive_service(user_id)
-    drive_files = download_drive_files(drive_service, folder_id="YOUR_DRIVE_FOLDER_ID")
+    drive_files = download_drive_files(drive_service, folder_id="1HO7riAgT66kBj71XfheZh8wTSlQCoXet")
     for file in drive_files:
         full_text = parse_attachment(file)
         email_doc = {

@@ -1,4 +1,3 @@
-# src/rag_pipeline.py
 import time
 from vector_db import retrieve_emails
 from llm_wrapper import generate

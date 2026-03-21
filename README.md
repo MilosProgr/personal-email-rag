@@ -106,9 +106,6 @@ personal-email-rag/
 │   ├── llm_wrapper.py          # Local LLM loading and inference
 │   ├── rag_pipeline.py         # Core RAG logic (embed → retrieve → generate)
 │   ├── vector_db.py            # PostgreSQL + pgvector operations
-│
-├── tests/
-│   ├── demo_multi_user.py      # Multi-user demo and testing
 │   └── user_auth.py            # Simple user authentication and multi-user validation
 │
 ├── docker-compose.yml          # Docker setup for app + database
@@ -181,22 +178,6 @@ Show me emails discussing API integration
 Summarize all conversations about the product launch
 
 When did I last hear from the marketing team?
-
-## Running Tests
-1. Demo multi-user test
-python -m tests.demo_multi_user
-
-This runs multiple queries for different users, showing answers and metrics:
-
-=== User: user1 ===
-Query: What did Alice say about the Q4 budget?
-Answer:
-...
-Metrics -> Embedding: 0.12s | Retrieval: 0.03s | LLM: 1.45s
-2. Authentication test
-python -m unittest tests.user_auth
-
-This verifies that only valid users (user1 / user2) can authenticate.
 
 ## Usage Notes
 

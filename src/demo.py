@@ -1,5 +1,5 @@
 from rag_pipeline import run_query
-from tests.user_auth import authenticate
+from user_auth import authenticate
 
 queries = [
     ("user1", "What did Alice say about the Q4 budget?"),
