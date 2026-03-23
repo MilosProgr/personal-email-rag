@@ -46,28 +46,110 @@ The system is fully extensible and can be deployed locally using Docker.
 
 ## Architecture
 
-The system follows a modular RAG pipeline:
+### High-Level Flow
+User Query
+↓
+Embedding (Sentence-Transformers)
+↓
+Vector DB (PostgreSQL + pgvector)
+↓
+Top-K Retrieval (filtered by user_id)
+↓
+Prompt Construction
+↓
+Local LLM (Bloom / Mistral)
+↓
+Answer with References
 
-1. **Gmail API / Google Drive API**  
-   - Fetches emails and documents per user using OAuth authentication  
+---
+## Architecture Details
 
-2. **Email & Document Parser**  
-   - Extracts structured data (sender, subject, body, timestamp)  
-   - Parses attachments (PDF, DOCX, TXT)  
+### Components
 
-3. **Embedding Model**  
-   - Converts text into vector representations using sentence-transformers  
+- **Gmail Client**
+  - Handles authentication via OAuth2
+  - Fetches emails and attachments
 
-4. **Vector Database (pgvector)**  
-   - Stores embeddings and metadata  
-   - Enables similarity search using vector distance  
+- **Attachment Parser**
+  - Extracts text from PDF, DOCX, and TXT files
 
-5. **RAG Pipeline**  
-   - Retrieves top-K relevant documents  
-   - Constructs context-aware prompt  
+- **Embedding Model**
+  - Converts email + attachment text into vectors
 
-6. **Local LLM**  
-   - Generates final answer using retrieved context  
+- **Vector Database (pgvector)**
+  - Stores embeddings and metadata
+  - Performs similarity search
+
+- **RAG Pipeline**
+  - Retrieves relevant emails using vector similarity
+  - Builds prompt for LLM
+
+- **Local LLM**
+  - Generates final response using retrieved context
+
+---
+
+### Data Flow
+
+1. Emails are fetched via Gmail API  
+2. Attachments are downloaded and parsed  
+3. Combined text is embedded  
+4. Vectors are stored in PostgreSQL  
+5. Query is embedded  
+6. Top-K similar emails are retrieved  
+7. LLM generates contextual answer  
+
+---
+
+## Model Choices
+
+### Embedding Model
+`sentence-transformers/all-MiniLM-L6-v2`
+
+**Why:**
+- Lightweight and fast
+- Good semantic similarity performance
+- Suitable for local execution
+
+---
+
+### LLM Model
+`bigscience/bloom-560m`
+
+**Why:**
+- Runs locally without GPU (or minimal GPU)
+- Easy to integrate with HuggingFace
+
+**Limitations:**
+- Lower quality compared to larger models (Mistral, LLaMA)
+
+**Future Improvement:**
+- Use quantized Mistral via Ollama or llama.cpp
+
+---
+## Vector Database
+
+**PostgreSQL + pgvector**
+
+**Why:**
+- Fully local solution
+- Easy setup and integration
+- Supports efficient similarity search
+
+**Configuration:**
+```sql
+CREATE TABLE emails (
+  id SERIAL PRIMARY KEY,
+  user_id TEXT,
+  sender TEXT,
+  recipient TEXT,
+  subject TEXT,
+  body TEXT,
+  timestamp TIMESTAMP,
+  embedding VECTOR(384)
+);
+
+CREATE INDEX ON emails USING ivfflat (embedding vector_cosine_ops);
 
 ### Design Decisions
 
@@ -114,6 +196,27 @@ personal-email-rag/
 └── README.md                   # Project documentation
 
 ```
+
+### Multi-User Support
+Each email is stored with a user_id.
+## Isolation Mechanism
+SQL filtering:
+  WHERE user_id = ?
+Separate OAuth tokens:
+token_user1.pkl
+token_user2.pkl 
+## Security Guarantess
+Users cannot access other users’ emails
+Cross-user queries return empty results
+## Demo Example
+User2 querying User1 data → No emails found
+### Google Drive Integration (Bonus)
+Downloads files from a specified Drive folder
+Supported formats:
+.pdf
+.docx
+.txt
+Files are treated as email-like documents and embedded
 ## Setup
 1. Clone repository
 git clone <repo_url>
