@@ -159,12 +159,7 @@ CREATE INDEX ON emails USING ivfflat (embedding vector_cosine_ops);
 - A lightweight embedding model was chosen to ensure fast inference on local hardware.  
 - BLOOM-560m was selected as a balance between performance and resource usage.  
 - pgvector was used due to its seamless integration with PostgreSQL and efficient similarity search.
-
-### Model Choices
-
-- **Embedding:** all-MiniLM-L6-v2 (fast, lightweight)  
-- **LLM:** BLOOM-560m (runs locally, low resource)  
-- **DB:** pgvector (efficient similarity search)  
+ 
 
 ---
 
