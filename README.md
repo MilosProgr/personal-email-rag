@@ -150,7 +150,7 @@ CREATE TABLE emails (
 );
 
 CREATE INDEX ON emails USING ivfflat (embedding vector_cosine_ops);
-
+---
 ### Design Decisions
 
 - A lightweight embedding model was chosen to ensure fast inference on local hardware.  
