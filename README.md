@@ -127,6 +127,7 @@ Answer with References
 - Use quantized Mistral via Ollama or llama.cpp
 
 ---
+
 ## Vector Database
 
 **PostgreSQL + pgvector**
@@ -148,9 +149,11 @@ CREATE TABLE emails (
   timestamp TIMESTAMP,
   embedding VECTOR(384)
 );
+```
 
 CREATE INDEX ON emails USING ivfflat (embedding vector_cosine_ops);
----
+
+
 ### Design Decisions
 
 - A lightweight embedding model was chosen to ensure fast inference on local hardware.  
